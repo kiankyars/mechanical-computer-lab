@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "name": "Slider-crank physics fixture",
+  "description": "Positive control for hinge, slider, spring and contact physics. This does not perform addition. The crank drives a connecting rod and sliding block; the crank arm can push a separate spring-return follower.",
+  "bodies": [
+    { "id": "crank-arm", "type": "dynamic", "position": [1, -6], "shapes": [{ "type": "box", "half": [1, 0.12] }] },
+    { "id": "connecting-rod", "type": "dynamic", "position": [3.5, -6], "shapes": [{ "type": "box", "half": [1.5, 0.1] }] },
+    { "id": "slider", "type": "dynamic", "position": [5, -6], "shapes": [{ "type": "box", "half": [0.28, 0.28] }] },
+    { "id": "follower", "type": "dynamic", "position": [1.5, -4.8], "shapes": [{ "type": "ball", "radius": 0.2 }] }
+  ],
+  "joints": [
+    { "id": "arm-drive", "type": "fixed", "a": "$crank", "b": "crank-arm", "anchorA": [0, 0], "anchorB": [-1, 0] },
+    { "id": "rod-crank", "type": "revolute", "a": "crank-arm", "b": "connecting-rod", "anchorA": [1, 0], "anchorB": [-1.5, 0] },
+    { "id": "rod-slider", "type": "revolute", "a": "connecting-rod", "b": "slider", "anchorA": [1.5, 0], "anchorB": [0, 0] },
+    { "id": "slider-guide", "type": "prismatic", "a": "$ground", "b": "slider", "anchorA": [5, -6], "anchorB": [0, 0], "axis": [1, 0], "limits": [-4.2, 0.1] },
+    { "id": "follower-guide", "type": "prismatic", "a": "$ground", "b": "follower", "anchorA": [1.5, -4.8], "anchorB": [0, 0], "axis": [0, 1], "limits": [-0.01, 1.4] },
+    { "id": "follower-return", "type": "spring", "a": "$ground", "b": "follower", "anchorA": [1.5, -3.8], "anchorB": [0, 0], "restLength": 1, "stiffness": 5, "damping": 1 }
+  ],
+  "carryCandidates": []
+}

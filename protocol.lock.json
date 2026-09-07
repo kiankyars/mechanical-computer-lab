@@ -1,0 +1,19 @@
+{
+  "protocol": "mechanical-adder-v1",
+  "files": {
+    "evaluator/conditions.ts": "2bacc628e78f9714faf2b0099c075090e311c09d8a120a7ace566dde3a6829eb",
+    "evaluator/evaluate.ts": "a81c18c088370023ce765ddb4f3e36f05ee37ad57bb6ff800942f4d6a3bfe411",
+    "package-lock.json": "12c0a0339c50754861a67f94ae3da6563e175c2f4c110f5ed2b247c8756f63a5",
+    "package.json": "706498327ce55c6d515f94c96b4384af566a4948686d1cf4179c1eba27a2c297",
+    "scripts/artifacts.ts": "2c59bf353ce7c63b1360ecef003ebff59047d86040ca04142e4495cecb6d6798",
+    "scripts/check-built-worker.ts": "714637edc7f0dfdc2e33c3c779417875aebae86bc376590b09eb7fe884cc6f5a",
+    "scripts/evaluate.ts": "e76757b2202ab59c9c34d3bdd3fa8453d0f741ef0a1cc4a308910afeeac69664",
+    "scripts/freeze.ts": "df5749b3e7447092834a4f0cee7be6dfff9c9692c45d8e942e5d2cd17871339a",
+    "scripts/schema.ts": "d14123c764aa309a89c784a7d2385b14ff963c9baa3d4c8fe677fa75b088f115",
+    "scripts/trace.ts": "1abfc44b26b66e444a1e309d67dc0e2f36bf7addfbfc3e7402b26d26139d60b6",
+    "simulator/protocol.ts": "d2b39ba3a5e73371089227ac9049128f314180c8c78e9727f7c35bc90b87397c",
+    "simulator/readout.ts": "6d63d9d8e6aaa6a637c3cec3d74b95b3d6f83fd0faa4609f5aaf820881ba98ff",
+    "simulator/schema.ts": "c696bf72a440a5a0ad76c224452af74c223be031ce4ee369cf2d5c550752a0c5",
+    "simulator/world.ts": "ea007383c3964522f4d570ee6b714a6ae4c6a0265394ff715ab3892aba7fa98f"
+  }
+}

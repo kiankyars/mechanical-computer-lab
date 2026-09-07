@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "name": "Unsolved adder starter",
+  "description": "Empty candidate. All gauges remain zero: this is intentionally not a working adder. Design passive parts and connections to solve the task.",
+  "bodies": [],
+  "joints": [],
+  "carryCandidates": []
+}

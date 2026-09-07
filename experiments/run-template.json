@@ -1,0 +1,17 @@
+{
+  "status": "template-not-a-run",
+  "model": null,
+  "checkpoint": null,
+  "reasoning": null,
+  "temperature": null,
+  "modelGenerationSeeds": [null, null],
+  "generationTokenBudgetPerArm": null,
+  "wallClockLimitPerArmSeconds": null,
+  "arms": {
+    "oneAttempt": { "feedbackCalls": 0 },
+    "feedback": { "feedbackCalls": 20 }
+  },
+  "trustedEvaluatorCommit": null,
+  "protocolLockSha256": null,
+  "runs": []
+}

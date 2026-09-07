@@ -1,0 +1,69 @@
+# Experiment protocol
+
+## Question
+
+Can the same model design a two-bit mechanical adder more successfully with simulation feedback than in one attempt? A successful candidate must compute every `A,B∈{0,1,2,3}` using passive mechanics after input setup and the fixed crank drive. It submits JSON only.
+
+This repository deliberately does **not** include a solved reference adder. The physics fixture verifies that the environment works, not that this exact task is feasible or well calibrated. Pilot the design space before treating failures as evidence of a model's capability ceiling.
+
+## Freeze before optimization
+
+1. Verify tests, inspect the simulator/evaluator, and record the commit plus `protocol.lock.json` hash outside the participant's writable checkout. `npm run verify:frozen` detects local drift but cannot defeat a malicious participant with write access to the checker and its lock.
+2. Give each model run a separate candidate workspace. Keep a trusted evaluator checkout controlled by the experiment owner. Both arms receive the same task description, component rules and starting assets. Do not let the feedback arm edit simulator code.
+3. Predeclare model/checkpoint, reasoning setting, temperature, generation seed, token budget, wall-clock limit and feedback allowance. Record all attempts, including malformed JSON, timeouts and failed setups; do not select only favorable runs.
+
+Use at least two independent model generation seeds for a pilot, preferably more for a claim. **Model seeds and perturbation seeds are different variables.** A deterministic physics rerun is not another independent model attempt.
+
+## Matched conditions
+
+| Condition   | Candidate-design access                                             |
+| ----------- | ------------------------------------------------------------------- |
+| One attempt | One machine submission; no simulator feedback before submission     |
+| Feedback    | Iterative machine submissions with public simulation reports/traces |
+
+A practical pilot fixes the model, initial prompt, sampling settings and total generation-token allowance across arms, with20 evaluation calls allowed in the feedback arm and0 in the one-attempt arm. Record actual tokens, wall time and call count. This measures the effect of feedback plus revision; it does not isolate feedback from extra opportunities to revise unless an additional no-feedback revision control is used. A tool-enabled Codex run needs externally enforced access/call accounting for a rigorous comparison.
+
+`experiments/run-template.json` is a bookkeeping template, not evidence of a run. No model API is invoked by this repository.
+
+## Public development profile
+
+`npm run evaluate -- --machine candidate.machine.json --profile development --seeds 17,29`
+
+Every configuration evaluates all16 pairs in seeded order. The conditions are fixed per suite, not adjusted based on answers:
+
+- Nominal forward-drive and fresh-world trials.
+- One condition sampled independently from each declared perturbation seed.
+- Target speed scale0.8–1.2, torque cap scale0.8–1.2, friction scale0.75–1.25, common input setup offset−0.02 to+0.02 units.
+- A half-timestep numerical audit at1/480s.
+- Each configuration also runs a persistent-world sequence with reverse resets between operations.
+
+No arbitrary body-position jitter is used: it could break joint assembly rather than measure robustness. Manufacturing tolerances and tooth-contact validation are future protocol versions, not claims of this one.
+
+## Final evaluation
+
+Freeze the submitted JSON hash **before** the evaluator owner privately chooses final perturbation/order seeds. In the trusted evaluator checkout:
+
+```sh
+npm ci
+npm run verify:frozen
+npm run evaluate -- --machine /absolute/path/submitted.machine.json --profile final --seeds PRIVATE_SEED_1,PRIVATE_SEED_2 --require-pass
+```
+
+Replace placeholders with distinct unsigned32-bit integers. Do not put private seeds or results in a checkout available to the design agent. The final profile refuses an implicit default seed. After final evaluation, publish the seeds, candidate, engine lock, trusted evaluator hash and complete results for reproducibility. A second clean Rapier checkout checks replay; it is not an independent engine implementation.
+
+There are only16 arithmetic inputs, all public. Unseen tests measure **physical robustness and sequence dependence**, not arithmetic generalization to unseen sums or larger bit widths.
+
+## Metrics and causal evidence
+
+Report per-arm/per-model-seed:
+
+- Stable correct outputs out of16, separately for each fresh/persistent condition.
+- Robustness acceptance (every scored trial correct, no recorded reset failures).
+- Setup failures, physics failures, wrong values, unstable/dead-zone outputs, and reset failures.
+- Candidate/evaluator/lockfile hashes, engine/runtime/platform, declared versus actual design budget.
+- Part/collider/joint counts, measured crank work, maximum penetration and joint residuals.
+- Nominal-versus-perturbed changes and half-timestep audit differences.
+
+Ask the designer to name proposed carry parts in `carryCandidates` before ablation. Evaluate the intact candidate and separate `--remove BODY_ID` / `--lock BODY_ID` interventions on the same cases and conditions. A failure after removing a large part is only evidence of dependence on that part; it does not automatically identify a carry computation. Inspect trajectories and case-specific differences.
+
+Mechanically encoded truth-table geometry is allowed: it is still a physical computation. Do not equate it with an interpretable carry architecture. The intended progression after a validated adder is an accumulator, then a programmable mechanism, each requiring a newly frozen task/protocol.
