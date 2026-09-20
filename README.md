@@ -4,6 +4,8 @@ A fixed-physics benchmark for model-designed, mostly planar **two-bit mechanical
 
 **Status:** runnable experiment infrastructure, not a solved adder. The included slider-crank fixture is a physics positive control. The empty adder starter intentionally produces zero and passes only **1/16** arithmetic cases. No model comparison has been run, and the task's difficulty has not been calibrated.
 
+[Open the lab](https://kiankyars.github.io/mechanical-computer-lab/) · [GitHub repository](https://github.com/kiankyars/mechanical-computer-lab)
+
 ## Start
 
 Node 22.13+ and npm are required. Dependencies and Rapier are pinned in `package-lock.json`.
@@ -15,6 +17,19 @@ npm run dev
 ```
 
 Open [the local workbench](http://127.0.0.1:3018). Load a machine JSON, choose inputs, turn the crank, pause/step, slow playback, inspect parts, and evaluate all16 cases. Recorded playback moves only the visualization; it never writes back into physics. There is no account, cloud compute, telemetry, or paid model API in this experiment.
+
+## GitHub Pages
+
+Pushes to `main` validate the frozen protocol, build the same viewer as a static site, and deploy it through GitHub Actions. The simulation runs locally in your browser's worker; machine uploads are not sent to a server. Final experiment scoring still uses the separately trusted CLI evaluator.
+
+To preview the published build locally:
+
+```sh
+npx --no-install vite build --config vite.pages.config.ts
+npx --no-install vite preview --config vite.pages.config.ts
+```
+
+The static entry in `static/` reuses `app/page.tsx`. Its separate Vite configuration preserves the existing local server, pinned dependencies, and frozen experiment files.
 
 ## Evaluate a design
 
