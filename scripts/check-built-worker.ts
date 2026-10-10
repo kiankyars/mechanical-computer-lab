@@ -5,11 +5,11 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import { root } from './artifacts';
 
-const directory = path.join(root, 'dist/client/_next/static/workers');
-const file = (await readdir(directory)).find((name) =>
+const directory = path.join(root, 'dist/assets');
+const file = (await readdir(directory).catch((): string[] => [])).find((name) =>
   /^simulation\.worker-.*\.js$/.test(name),
 );
-if (!file) throw new Error('Build the viewer first');
+if (!file) throw new Error('Build the viewer first: npm run build');
 const worker = new Worker(
   `
   import { parentPort } from 'node:worker_threads';
@@ -22,12 +22,12 @@ const worker = new Worker(
   { eval: true, execArgv: ['--input-type=module'] },
 );
 
-function waitFor(type: string) {
+function waitFor(type: string, ms = 10000) {
   return new Promise<Record<string, unknown>>((resolve, reject) => {
     const timeout = setTimeout(() => {
       cleanup();
       reject(new Error(`Timed out waiting for ${type}`));
-    }, 10000);
+    }, ms);
     const onError = (error: Error) => {
       cleanup();
       reject(error);
@@ -69,8 +69,17 @@ try {
   const evaluated = waitFor('evaluated');
   worker.postMessage({ type: 'evaluate' });
   assert.equal(((await evaluated).suite as { successes: number }).successes, 1);
+  const stressed = waitFor('stressed', 120000);
+  worker.postMessage({ type: 'stress', seeds: [17, 29] });
+  const summary = (await stressed).summary as {
+    accepted: boolean;
+    suites: { successes: number }[];
+  };
+  assert.equal(summary.suites.length, 8);
+  assert.ok(summary.suites.every((suite) => suite.successes === 1));
+  assert.equal(summary.accepted, false);
   console.log(
-    'Production worker bundle loaded and scored all16 inputs correctly (starter: 1/16). This is not visual browser QA.',
+    'Production worker bundle loaded, scored all 16 inputs correctly (starter: 1/16) and ran the 8-suite development stress profile (not accepted, as expected). This is not visual browser QA.',
   );
 } finally {
   await worker.terminate();
